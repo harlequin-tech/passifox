@@ -66,7 +66,7 @@ browserAction.showDefault = function(callback, tab) {
 		iconType: "normal",
 		popup: "popup.html"
 	}
-	if(!keepass.isConfigured() || keepass.isDatabaseClosed || !keepass.isKeePassHttpAvailable || page.tabs[tab.id].errorMessage) {
+	if(!mooltipass.isConnected() || page.tabs[tab.id].errorMessage) {
 		stackData.iconType = "cross";
 	}
 
@@ -218,9 +218,9 @@ browserAction.generateIconName = function(iconType, icon) {
 	}
 
 	var name = "icon_";
-	name += (keepass.keePassHttpUpdateAvailable()) ? "new_" : "";
+	//name += (keepass.keePassHttpUpdateAvailable()) ? "new_" : "";
 	name += (!iconType || iconType == "normal") ? "normal_" : iconType + "_";
-	name += keepass.getIconColor();
+	name += "blue"; // keepass.getIconColor();
 	name += "_19x19.png";
 
 	return name;

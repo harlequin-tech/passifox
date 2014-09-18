@@ -24,7 +24,7 @@
 			"background/aes.js",
 			"background/cryptoHelpers.js",
 			"background/utf8.js",
-			"background/keepass.js",
+			"background/mooltipass.js",
 			"background/httpauth.js",
 			"background/browserAction.js",
 			"background/page.js",
@@ -65,6 +65,9 @@
 		"http://*/*",
 		"http://localhost:19455/",
 		"http://localhost/",
-		"https://raw.github.com/"
+		"https://raw.github.com/",
+		"contentSettings",
+		"management",
+		"notifications"
 	]
 }
