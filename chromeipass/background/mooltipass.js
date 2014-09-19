@@ -3,7 +3,8 @@ var mooltipass = {};
 var mpClient = null;
 var contentAddr = null;
 var connected = null;
-var mpInputCallback = null;;
+var mpInputCallback = null;
+var mpUpdateCallback = null;
 
 function getAll(ext)
 {
@@ -40,6 +41,10 @@ chrome.runtime.onMessageExternal.addListener(function(request, sender, sendRespo
             break;
         case 'updateComplete':
             console.log('back: got updateComplete');
+            if (mpUpdateCallback) {
+                mpUpdateCallback('success');
+                mpUpdateCallback = null;
+            }
             //chrome.tabs.sendMessage(contentAddr, request);
             break;
         case 'connected':
@@ -89,12 +94,23 @@ mooltipass.isConnected = function()
 // needs to block until a response is received.
 mooltipass.updateCredentials = function(callback, tab, entryId, username, password, url) 
 {
-	console.log("mp.updateCredentials(callback, {1}, {2}, {3}, [password], {4})", tab.id, entryId, username, url);
+	console.log("mp.updateCredentials(})", tab.id, entryId, username, url);
 
 	// unset error message
 	page.tabs[tab.id].errorMessage = null;
 
     chrome.runtime.sendMessage({type: 'update', url: url, inputs: {login: {id: 0, name: 0, value: username}, password: { id: 1, name: 1, value: password }}});
+
+    request = { type: 'update',
+                url: url, 
+                inputs: {
+                    login: {id: 'login.id', name: 'login.name', value: username},
+                    password: {id: 'pass.id', name: 'pass.name', value: password} } };
+
+    console.log('sending update to '+mpClient.id);
+    contentAddr = tab.id;
+    mpUpdateCallback = callback;
+    chrome.runtime.sendMessage(mpClient.id, request);
 
     // this needs to be blocking, but can't because we're waiting on an async response from the mp app and the mp, which may never arrive.
     // So this actually needs to tight loop until an mp response arrives, with a timeout.

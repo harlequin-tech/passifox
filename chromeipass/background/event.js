@@ -3,12 +3,12 @@ var event = {};
 
 event.onMessage = function(request, sender, callback) {
 	if (request.action in event.messageHandlers) {
-		console.log("onMessage(" + request.action + ") for #" + sender.tab.id);
 
 		if(!sender.hasOwnProperty('tab') || sender.tab.id < 1) {
 			sender.tab = {};
 			sender.tab.id = page.currentTabId;
 		}
+		console.log("onMessage(" + request.action + ") for #" + sender.tab.id);
 
 		event.invoke(event.messageHandlers[request.action], callback, sender.tab.id, request.args);
 
@@ -112,14 +112,15 @@ event.onGetStatus = function(callback, tab) {
     console.log('event.onGetStatus()');
 
 	browserAction.showDefault(null, tab);
+    page.tabs[tab.id].errorMessage = undefined;  // XXX debug
 
 	callback({
 		identifier: 'my_mp_key',
-		configured: false,
+		configured: true,
 		databaseClosed: false,
-		keePassHttpAvailable: flase,
+		keePassHttpAvailable: true,
 		encryptionKeyUnrecognized: false,
-		associated: flase,
+		associated: mooltipass.isConnected(),
 		error: page.tabs[tab.id].errorMessage
 	});
 }
@@ -155,7 +156,7 @@ event.onCheckUpdateKeePassHttp = function(callback, tab) {
 
 event.onUpdateAvailableKeePassHttp = function(callback, tab) {
     console.log('event.onCheckUpdateKeePassHttp()');
-	callback(true);
+	callback(false);    // update not available
 }
 
 event.onRemoveCredentialsFromTabInformation = function(callback, tab) {

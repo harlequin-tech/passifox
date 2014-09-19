@@ -115,6 +115,7 @@ browserAction.stackAdd = function(callback, tab, icon, popup, level, push, visib
 
 browserAction.removeLevelFromStack = function(callback, tab, level, type, dontShow) {
 	if(!page.tabs[tab.id]) {
+        console.log('browserAction.removeLevelFromStack() no tab.id');
 		return;
 	}
 
@@ -140,6 +141,7 @@ browserAction.removeLevelFromStack = function(callback, tab, level, type, dontSh
 	page.tabs[tab.id].stack = newStack;
 
 	if(!dontShow) {
+        console.log('browserAction.removeLevelFromStack() showing tab');
 		browserAction.show(callback, tab);
 	}
 }
@@ -153,6 +155,7 @@ browserAction.stackPop = function(tabId) {
 browserAction.stackPush = function(data, tabId) {
 	var id = tabId || page.currentTabId;
 
+    console.log('browserAction.stackPush()');
 	browserAction.removeLevelFromStack(null, {"id": id}, data.level, "<=", true);
 	page.tabs[id].stack.push(data);
 };
@@ -186,6 +189,7 @@ browserAction.removeRememberPopup = function(callback, tab, removeImmediately) {
 browserAction.setRememberPopup = function(tabId, username, password, url, usernameExists, credentialsList) {
 	var id = tabId || page.currentTabId;
 
+    console.log('browserAction.setRememberPopup()');
 	var stackData = {
         visibleForMilliSeconds: 7500,
 		level: 10,

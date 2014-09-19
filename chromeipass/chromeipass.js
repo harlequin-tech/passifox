@@ -520,10 +520,13 @@ cipForm.onSubmit = function() {
 
 	if(usernameField) {
 		usernameValue = usernameField.val();
+        console.log('submit: username "'+usernameValue);
 	}
 	if(passwordField) {
 		passwordValue = passwordField.val();
+        console.log('submit: password "'+passwordValue);
 	}
+
 
 	cip.rememberCredentials(usernameValue, passwordValue);
 };
@@ -1619,6 +1622,8 @@ cip.rememberCredentials = function(usernameValue, passwordValue) {
 		return false;
 	}
 
+    console.log('rememberCredentials()');
+
 	var usernameExists = false;
 
 	var nothingChanged = false;
@@ -1662,13 +1667,16 @@ cip.rememberCredentials = function(usernameValue, passwordValue) {
 			}
 		}
 
+        console.log('rememberCredentials - sending set_remember_credentials');
 		chrome.extension.sendMessage({
 			'action': 'set_remember_credentials',
 			'args': [usernameValue, passwordValue, url, usernameExists, credentialsList]
 		});
 
 		return true;
-	}
+	} else {
+        console.log('rememberCredentials - nothing changed');
+    }
 
 	return false;
 };
